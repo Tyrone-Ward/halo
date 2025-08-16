@@ -1,17 +1,17 @@
 {
-  "extends": "@tsconfig/node20/tsconfig.json",
-  "compilerOptions": {
-    "outDir": "dist",
-    "baseUrl": "./src",
-    "paths": {
-      "@/*": ["/"],
-      "@config/*": ["config/*"],
-      "@utils/*": ["utils/*"],
-      "@middleware/*": ["middleware/*"],
-      "@services/*": ["services/*"],
-      "@routes/*": ["routes/*"]
-    }
-  },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules"]
+    "extends": "@tsconfig/node20/tsconfig.json",
+    "compilerOptions": {
+        "outDir": "dist",
+        "baseUrl": "./src",
+        "paths": {
+            "@/*": ["/"],
+            "@config/*": ["config/*"],
+            "@utils/*": ["utils/*"],
+            "@middleware/*": ["middleware/*"],
+            "@services/*": ["services/*"],
+            "@routes/*": ["routes/*"]
+        }
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules"]
 }

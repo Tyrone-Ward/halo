@@ -18,6 +18,7 @@ process.on('SIGINT', async () => {
 const startServer = async () => {
     try {
         // await initDatabase()
+        // Create MQTT connection
         expressServer.listen(SERVER_PORT, () => {
             logger.info(`Listening on http://localhost:${SERVER_PORT}`)
         })
