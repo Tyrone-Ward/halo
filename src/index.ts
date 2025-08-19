@@ -1,4 +1,4 @@
-import { expressServer, SERVER_PORT } from '@config/server.config'
+import { expressServer, SERVER_PORT, mqttClient } from '@config/server.config'
 import { app } from '@config/app.config'
 import logger from '@utils/logger.js'
 import { sequelize } from '@config/database.config'
@@ -10,6 +10,7 @@ let SHUTDOWN = false
 process.on('SIGINT', async () => {
     if (!SHUTDOWN) {
         logger.info('Closing connections')
+        mqttClient.end()
         await sequelize.close()
         expressServer.close()
     }

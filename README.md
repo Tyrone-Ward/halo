@@ -6,15 +6,14 @@
 
 ## Intro
 
-A modular **Node.js home automation core** that uses **MQTT** for device communication, an **Event Bus** for real-time events, and **SQLite (via
-Sequelize)** for persistence.  
-Supports **multi-process plugins**, a **device registry**, and a **rule-based automation engine** with an API for web-based automation management.
+HALO is a modular **Node.js home automation system** that uses **MQTT** for device communication, an **Event Bus** for real-time events, and an **SQLite Database** for persistence.  
+HALO supports **multi-process plugins**, a **device registry**, and a **rule-based automation engine** with an API for web-based automation management.
 
 ---
 
 ## 🚀 Features
 
-- **MQTT integration**: Devices register and publish state over MQTT topics.
+- **MQTT integration**: Devices register and publish state and events over MQTT topics.
 - **Device registry**: Stores device metadata, capabilities, and status in SQLite.
 - **Event Bus**: Real-time event system (`EventEmitter`) used internally to broadcast device and automation events.
 - **Automation engine**: Rules are stored in the database and executed dynamically.
