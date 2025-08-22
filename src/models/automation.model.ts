@@ -32,7 +32,7 @@ export function initAutomationModel(sequelize: Sequelize): typeof Automation {
     Automation.init(
         {
             id: {
-                type: DataTypes.INTEGER.UNSIGNED,
+                type: DataTypes.INTEGER,
                 autoIncrement: true,
                 primaryKey: true
             },
