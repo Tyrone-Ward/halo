@@ -1,4 +1,5 @@
-import { expressServer, SERVER_PORT, mqttClient } from '@config/server.config'
+import { expressServer, SERVER_PORT } from '@config/server.config'
+import { connectMqtt, getMqttClient } from '@services/mqttService'
 import { app } from '@config/app.config'
 import logger from '@utils/logger.js'
 import { sequelize } from '@config/database.config'
@@ -10,16 +11,22 @@ let SHUTDOWN = false
 process.on('SIGINT', async () => {
     if (!SHUTDOWN) {
         logger.info('Closing connections')
-        mqttClient.end()
         await sequelize.close()
+        const mqttClient = getMqttClient()
+        mqttClient.end(false, {}, () => {
+            logger.info('Client has been disconnected')
+        })
         expressServer.close()
+        SHUTDOWN = true
     }
 })
 
 const startServer = async () => {
     try {
         // await initDatabase()
+        sequelize.sync()
         // Create MQTT connection
+        const mqttClient = await connectMqtt()
         expressServer.listen(SERVER_PORT, () => {
             logger.info(`Listening on http://localhost:${SERVER_PORT}`)
         })
