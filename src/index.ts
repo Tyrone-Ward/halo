@@ -18,13 +18,21 @@ process.on('SIGINT', async () => {
         })
         expressServer.close()
         SHUTDOWN = true
+
+        setTimeout(() => {
+            console.log('Exiting process.')
+        }, 3_000)
     }
 })
 
 const startServer = async () => {
     try {
         await initDatabase() // Sync database
-        await connectMqtt() // Create MQTT connection
+        const mqttClient = await connectMqtt() // Create MQTT connection
+        mqttClient.subscribe('home/HALO/devices/+/state')
+        mqttClient.subscribe('home/HALO/devices/register')
+        mqttClient.publish('home/HALO/status', JSON.stringify({ status: 'online' }))
+
         expressServer.listen(SERVER_PORT, () => {
             logger.info(`Listening on http://localhost:${SERVER_PORT}`)
         })
