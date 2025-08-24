@@ -1,37 +1,45 @@
-import logger from '@utils/logger'
-import mqtt, { MqttClient } from 'mqtt'
+import mqtt from 'mqtt'
+import logger from '../utils/logger'
+import { Automation } from 'models/automation.model'
 
 const MQTT_URL = process.env.MQTT_URL || 'mqtt://localhost:1883'
+export const mqttClient = mqtt.connect(MQTT_URL, { manualConnect: true })
 
-let client: MqttClient
-
-export function getMqttClient(): MqttClient {
-    if (!client) {
-        throw new Error('MQTT client not initialized yet. Call connectMqtt() first.')
-    }
-    return client
+const automations = async () => {
+    await Automation.findAll({ where: { enabled: true } })
 }
 
-export async function connectMqtt(): Promise<MqttClient> {
-    return new Promise((resolve, reject) => {
-        client = mqtt.connect(MQTT_URL, {
-            clientId: 'HALO',
-            will: {
-                topic: 'home/HALO/status', // Topic for the will message
-                payload: JSON.stringify({ status: 'offline' }), // Payload to be published
-                qos: 0, // Quality of Service level
-                retain: true // Retain the message on the broker
-            }
-        })
+mqttClient.on('connect', () => {
+    logger.info(`[MQTT] Connected to broker at ${MQTT_URL}`)
 
-        client.on('connect', () => {
-            logger.info(`[MQTT] Connected to broker at ${MQTT_URL}`)
-            resolve(client)
-        })
-
-        client.on('error', (err) => {
-            logger.error(`[MQTT] Connection error: ${err}`)
-            reject(err)
-        })
+    // Subscribe to base topics
+    mqttClient.subscribe('devices/+/state', (err) => {
+        if (err) logger.error('[MQTT] Failed to subscribe to device state topics')
     })
-}
+
+    mqttClient.subscribe('devices/register', (err) => {
+        if (err) logger.error('[MQTT] Failed to subscribe to device registry topic')
+    })
+
+    // 🔥 Start the server *after* MQTT is ready
+})
+
+mqttClient.on('message', async (topic, message) => {
+    const automations = await Automation.findAll({ where: { enabled: true } })
+
+    // const receivedData = JSON.parse(message.toString())?.state
+    // logger.info(`message state: ${receivedData}`)
+    try {
+        for (const automation of automations) {
+            if (
+                topic === `home/HALO/devices/${automation.dataValues.trigger.device}/state` &&
+                JSON.parse(message.toString())?.state === automation.dataValues.trigger.value
+            ) {
+                logger.info(`${topic} automation triggered`)
+                mqttClient.publish('cmnd/tasmota_0AA064/Power', 'TOGGLE')
+            }
+        }
+    } catch (err) {
+        logger.error(`[MQTT] Failed to parse message on ${topic}: ${err}`)
+    }
+})

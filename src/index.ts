@@ -1,5 +1,5 @@
 import { expressServer, SERVER_PORT } from '@config/server.config'
-import { connectMqtt, getMqttClient } from '@services/mqttService'
+import { mqttClient } from '@services/mqttService'
 import { app } from '@config/app.config'
 import logger from '@utils/logger.js'
 import { sequelize } from '@config/database.config'
@@ -12,13 +12,9 @@ process.on('SIGINT', async () => {
     if (!SHUTDOWN) {
         logger.info('Closing connections')
         await sequelize.close()
-        const mqttClient = getMqttClient()
-        mqttClient.end(false, {}, () => {
-            logger.info('Client has been disconnected')
-        })
         expressServer.close()
         SHUTDOWN = true
-
+        await mqttClient.endAsync()
         setTimeout(() => {
             console.log('Exiting process.')
         }, 3_000)
@@ -28,7 +24,8 @@ process.on('SIGINT', async () => {
 const startServer = async () => {
     try {
         await initDatabase() // Sync database
-        const mqttClient = await connectMqtt() // Create MQTT connection
+
+        mqttClient.connect()
         mqttClient.publish('home/HALO/status', JSON.stringify({ status: 'online' }))
 
         // Move to repsective services file
