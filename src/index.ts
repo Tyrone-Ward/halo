@@ -29,9 +29,11 @@ const startServer = async () => {
     try {
         await initDatabase() // Sync database
         const mqttClient = await connectMqtt() // Create MQTT connection
+        mqttClient.publish('home/HALO/status', JSON.stringify({ status: 'online' }))
+
+        // Move to repsective services file
         mqttClient.subscribe('home/HALO/devices/+/state')
         mqttClient.subscribe('home/HALO/devices/register')
-        mqttClient.publish('home/HALO/status', JSON.stringify({ status: 'online' }))
 
         expressServer.listen(SERVER_PORT, () => {
             logger.info(`Listening on http://localhost:${SERVER_PORT}`)

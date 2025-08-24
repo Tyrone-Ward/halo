@@ -1,5 +1,5 @@
-import winston from 'winston'
 import 'dotenv/config'
+import winston from 'winston'
 
 // Define your severity levels.
 // With them, You can create log files,

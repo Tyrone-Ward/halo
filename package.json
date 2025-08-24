@@ -4,7 +4,7 @@
     "main": "index.js",
     "scripts": {
         "dev": "tsx watch ./src/index.ts",
-        "build": "npx tsc && node dist/index.js",
+        "build": "npx tsc && node dist/src/index.js",
         "format": "npx prettier . --write"
     },
     "keywords": [],
