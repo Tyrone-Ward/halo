@@ -2,15 +2,18 @@
     "extends": "@tsconfig/node20/tsconfig.json",
     "compilerOptions": {
         "outDir": "dist",
-        "baseUrl": "./src",
+        "rootDir": "./src",
         "paths": {
-            "@/*": ["/"],
-            "@config/*": ["config/*"],
-            "@utils/*": ["utils/*"],
-            "@middleware/*": ["middleware/*"],
-            "@services/*": ["services/*"],
-            "@routes/*": ["routes/*"]
-        }
+            "@/*": ["./src"],
+            "@config/*": ["./src/config/*"],
+            "@utils/*": ["./src/utils/*"],
+            "@middleware/*": ["./src/middleware/*"],
+            "@services/*": ["./src/services/*"],
+            "@routes/*": ["./src/routes/*"],
+            "@models/*": ["./src/models/*"]
+        },
+        "resolveJsonModule": true,
+        "esModuleInterop": true
     },
     "include": ["src/**/*"],
     "exclude": ["node_modules"]

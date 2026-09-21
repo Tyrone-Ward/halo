@@ -1,8 +1,9 @@
 import mqtt from 'mqtt'
 import logger from '../utils/logger'
-import { Automation } from 'models/automation.model'
+import { Automation } from '../models/automation.model'
+import mqttConfig from '@config/mqtt.config'
 
-const MQTT_URL = process.env.MQTT_URL || 'mqtt://localhost:1883'
+const MQTT_URL = `${mqttConfig.host}:${mqttConfig.port}`
 export const mqttClient = mqtt.connect(MQTT_URL, { manualConnect: true })
 
 const automations = async () => {
@@ -20,8 +21,6 @@ mqttClient.on('connect', () => {
     mqttClient.subscribe('devices/register', (err) => {
         if (err) logger.error('[MQTT] Failed to subscribe to device registry topic')
     })
-
-    // 🔥 Start the server *after* MQTT is ready
 })
 
 mqttClient.on('message', async (topic, message) => {

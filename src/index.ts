@@ -1,9 +1,9 @@
-import { expressServer, SERVER_PORT } from '@config/server.config'
+import { expressServer, SERVER_PORT, SERVER_HOSTNAME } from '@config/server.config'
 import { mqttClient } from '@services/mqttService'
 import { app } from '@config/app.config'
 import logger from '@utils/logger.js'
 import { sequelize } from '@config/database.config'
-import { initDatabase } from 'models'
+import { initDatabase } from './models'
 
 // Gracefully shutdown ?
 let SHUTDOWN = false
@@ -33,7 +33,7 @@ const startServer = async () => {
         mqttClient.subscribe('home/HALO/devices/register')
 
         expressServer.listen(SERVER_PORT, () => {
-            logger.info(`Listening on http://localhost:${SERVER_PORT}`)
+            logger.info(`Listening on http://${SERVER_HOSTNAME}:${SERVER_PORT}`)
         })
     } catch (error) {
         logger.error('Failed to start server:', error)
