@@ -6,39 +6,19 @@
 
 ## Intro
 
-HALO is a modular **Node.js home automation system** that uses **MQTT** for device communication, an **Event Bus** for real-time events, and an **SQLite Database** for persistence.  
-HALO supports **multi-process plugins**, a **device registry**, and a **rule-based automation engine** with an API for web-based automation management.
+HALO is a modular **Node.js home automation platform** that uses **MQTT** for device communication and events, and an **SQLite Database** for
+persistence.  
+HALO supports **rule-based automation engine** with an API for web-based automation management.
 
 ---
 
 ## 🚀 Features
 
-- **MQTT integration**: Devices register and publish state and events over MQTT topics.
-- **Device registry**: Stores device metadata, capabilities, and status in SQLite.
-- **Event Bus**: Real-time event system (`EventEmitter`) used internally to broadcast device and automation events.
+- **MQTT integration**: Devices publish state and events over MQTT topics.
 - **Automation engine**: Rules are stored in the database and executed dynamically.
-- **Plugin system**: Extensions can run as separate processes managed by the core.
 - **REST API**: Manage devices and automations via HTTP endpoints (for a future web UI).
 
 ## 📡 MQTT Topics
-
-### Device Registration
-
-- **Topic:** `device/online`
-- **Payload (JSON):**
-
-```json
-{
-    "id": "presence_living_room",
-    "name": "Living Room Presence",
-    "type": "presence_sensor",
-    "capabilities": [{ "name": "presence", "values": ["active", "inactive"] }],
-    "location": "living_room",
-    "model": "PR-1",
-    "sw_version": "1.0.0",
-    "ip": "192.168.1.42"
-}
-```
 
 ### Device State
 
@@ -51,20 +31,4 @@ HALO supports **multi-process plugins**, a **device registry**, and a **rule-bas
     "value": "active",
     "timestamp": "2025-08-15T22:10:00Z"
 }
-```
-
-## ⚡ Event Bus
-
-The Event Bus is a central message hub (Node.js EventEmitter). Examples of events:
-
-`device_registered` → Fired when a new device comes online.
-
-`device_updated` → Fired when a device’s state changes.
-
-`automation_triggered` → Fired when an automation rule executes.
-
-Usage:
-
-```js
-
 ```

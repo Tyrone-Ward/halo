@@ -33,7 +33,7 @@ const startServer = async () => {
         mqttClient.subscribe('home/HALO/devices/register')
 
         expressServer.listen(SERVER_PORT, () => {
-            logger.info(`Listening on http://${SERVER_HOSTNAME}:${SERVER_PORT}`)
+            logger.info(`[APP] Listening on http://${SERVER_HOSTNAME}:${SERVER_PORT}`)
         })
     } catch (error) {
         logger.error('Failed to start server:', error)
